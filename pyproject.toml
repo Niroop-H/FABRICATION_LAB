@@ -9,7 +9,10 @@ authors = [
     {name = "Niroop H"},
 ]
 
-dependencies = [
+dependencies = ["Flask==3.1.2"]
+
+[project.optional-dependencies]
+full = [
     "numpy>=1.24.0",
     "scipy>=1.11.0",
     "pydantic>=2.0.0",
@@ -20,8 +23,6 @@ dependencies = [
     "matplotlib>=3.8.0",
     "pandas>=2.1.0",
 ]
-
-[project.optional-dependencies]
 dev = [
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
@@ -38,7 +39,7 @@ docs = [
 
 [build-system]
 requires = ["setuptools>=68.0", "wheel"]
-build-backend = "setuptools.backends._legacy:_Backend"
+build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["."]
@@ -64,3 +65,6 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = "-v --cov=src --cov-report=term-missing"
+
+[tool.vercel]
+entrypoint = "app:app"

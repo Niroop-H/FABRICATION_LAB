@@ -5,6 +5,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
+> **Web preview:** Vercel-ready Flask dashboard with a stateless thermal oxidation calculator. The full 3D facility described below remains a development target.
+
 > **Project Status**: Active Development — Stage 2 (Operational 180nm Reference Fab)
 
 A high-fidelity, walkable semiconductor fabrication facility simulator designed for industrial training. Trainees operate as fabrication technicians inside a physically accurate virtual cleanroom, learning correct industrial procedures, equipment behavior, safety practices, and manufacturing principles.
@@ -179,3 +181,48 @@ MIT License — See [LICENSE](LICENSE) for details.
 
 This software is an educational training simulator. It does not replace OEM equipment documentation, facility-specific operating procedures, or hands-on training under qualified supervision. Equipment interfaces are representative industry-style interfaces, not reproductions of proprietary OEM screens. All approximations in process models are documented with their limitations and valid operating ranges.
 "# FABRICATION_LAB" 
+
+
+## Deploy the web preview to Vercel
+
+1. Import this repository at https://vercel.com/new.
+2. Use the repository root (`./`) as Root Directory and **Flask** as Framework Preset.
+3. Leave Build Command, Install Command and Output Directory at their defaults.
+4. Deploy. No environment variables or database are required for this preview.
+5. Check `/api/health`, then run a calculation on the home page.
+
+`app.py` exports the Flask application. `vercel.json` sets a 30-second function
+limit. `.python-version` selects Python 3.12. Assets in `public/assets` are served
+by Vercel's CDN and templates are rendered by Flask. Deployment guidance:
+https://vercel.com/docs/frameworks/backend/flask
+
+### Run locally
+
+```bash
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# macOS/Linux: source .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m flask --app app run
+```
+
+Open http://127.0.0.1:5000. Run all current unit and HTTP checks with:
+
+```bash
+python -m unittest discover -s tests/unit -v
+```
+
+Optional scientific, plotting and communication dependencies remain available
+through `python -m pip install '.[full]'`. They are not needed by the web preview.
+
+### Current web scope
+
+- Responsive process dashboard, health check, input validation, growth chart and JSON export.
+- Existing Deal–Grove oxidation model with fixed Si(100), 1 atm and thin-oxide
+  enhancement disabled. Inputs are bounded to keep requests small and predictable.
+- Model uncertainty is an estimate from the existing engine, not measured accuracy.
+- Each request starts a separate calculation. There is no server-side history,
+  authentication, database, background simulation or WebSocket service.
+- Full wafer routes, other process tools and the walkable 3D client are not yet
+  exposed in the browser. Persistent training sessions need durable storage;
+  continuously running simulation services need a separate backend.

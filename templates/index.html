@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Silicon Lab · Process workspace</title><link rel="stylesheet" href="/assets/style.css"><script src="/assets/app.js" defer></script></head>
+<body>
+<header><a class="brand" href="/">▧ <span>SILICON<span class="light">LAB</span></span></a><span class="tag">VIRTUAL FAB / RESEARCH PREVIEW</span><span class="online" id="health">Checking service…</span></header>
+<main>
+<div class="intro"><div><p class="eyebrow">PROCESS ENGINEERING WORKSPACE</p><h1>Small scale. <span>Big possibilities.</span></h1><p>Explore silicon processing through your fabrication simulation engine.</p></div><div class="reference">REFERENCE PLATFORM<strong>180 nm / 200 mm</strong><span>Planar CMOS · educational model</span></div></div>
+<section class="grid">
+<aside class="panel"><p class="eyebrow">01 / PROCESS SETUP</p><h2>Thermal oxidation</h2><p class="muted">Model oxide growth on a silicon surface. Adjust the inputs, then compare the predicted thickness over time.</p>
+<form id="recipe">
+<label for="ambient">Oxidizing ambient</label><select id="ambient" name="ambient"><option value="DRY_O2">Dry oxygen · O₂</option><option value="WET_H2O">Wet steam · H₂O</option></select>
+<label for="temperature_c">Temperature <span>°C</span></label><input id="temperature_c" name="temperature_c" type="number" min="800" max="1100" step="1" value="1000" required><small>Simulation range: 800–1100 °C</small>
+<label for="duration_s">Process duration <span>seconds</span></label><input id="duration_s" name="duration_s" type="number" min="60" max="7200" step="1" value="1800" required>
+<label for="initial_thickness_nm">Initial oxide thickness <span>nm</span></label><input id="initial_thickness_nm" name="initial_thickness_nm" type="number" min="0" max="100" step="0.1" value="2" required>
+<button type="submit" id="run">Run simulation <span>↗</span></button><p id="status" role="status" aria-live="polite">Ready to calculate.</p>
+</form></aside>
+<div class="results"><section class="panel output"><div class="section-head"><div><p class="eyebrow">02 / MODEL OUTPUT</p><h2>Oxide growth profile</h2></div><span class="badge">Si (100) · 1 atm</span></div>
+<div class="metrics"><div><p>Final thickness</p><strong id="thickness">—</strong><span>nm SiO₂</span></div><div><p>Model uncertainty</p><strong id="uncertainty">—</strong><span>nm · estimated</span></div><div><p>Simulated duration</p><strong id="elapsed">—</strong><span>minutes</span></div></div>
+<div class="chart"><span class="axis">OXIDE THICKNESS / nm</span><svg id="chart" viewBox="0 0 640 240" role="img" aria-label="Oxide growth chart. Run a simulation to see results."><path class="gridline" d="M48 20V205H620 M48 65H620 M48 110H620 M48 155H620"/><text x="200" y="115" class="placeholder">Your simulation will appear here</text></svg><span class="axis right">PROCESS TIME / seconds</span></div>
+<button class="secondary" id="download" disabled>Download result JSON ↓</button></section>
+<section class="panel notes"><p class="eyebrow">03 / INTERPRETING THE RESULT</p><h3>A model, with clear boundaries.</h3><p>The existing Deal–Grove engine estimates oxide growth from temperature, time and ambient. This web module uses a fixed silicon orientation and pressure, with thin-oxide enhancement disabled.</p><p class="notice">Training preview only. The predictions have not been benchmarked for manufacturing. The walkable 3D fab, persistent wafer tracking and other node workflows are not included in this web release.</p></section></div></section>
+<footer><span>SILICON LAB · FABRICATION RESEARCH</span><span>Independent runs · No account or database required</span></footer>
+</main></body></html>
