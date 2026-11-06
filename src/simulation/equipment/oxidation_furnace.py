@@ -26,7 +26,6 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 
-from src.simulation.core.state_machine import EquipmentState
 from src.simulation.core.units import (
     PhysicalQuantity,
     pressure,
