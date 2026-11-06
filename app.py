@@ -8,6 +8,9 @@ from werkzeug.exceptions import HTTPException
 from src.simulation.process.thermal_oxidation import OxidationAmbient, ThermalOxidationModel
 
 app = Flask(__name__, static_folder=None)
+from src.fab.api import fab
+app.register_blueprint(fab)
+
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024
 
 

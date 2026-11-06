@@ -87,3 +87,6 @@ desktop.ini
 .env
 *.pem
 *.key
+
+.local-data/
+node_modules/
