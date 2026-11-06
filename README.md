@@ -178,3 +178,4 @@ MIT License — See [LICENSE](LICENSE) for details.
 ## ⚠️ Disclaimer
 
 This software is an educational training simulator. It does not replace OEM equipment documentation, facility-specific operating procedures, or hands-on training under qualified supervision. Equipment interfaces are representative industry-style interfaces, not reproductions of proprietary OEM screens. All approximations in process models are documented with their limitations and valid operating ranges.
+"# FABRICATION_LAB" 
