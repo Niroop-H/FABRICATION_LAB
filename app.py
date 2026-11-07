@@ -16,6 +16,11 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024
 
 @app.get('/')
 def index():
+    return render_template('fab.html')
+
+
+@app.get('/calculator')
+def calculator():
     return render_template('index.html')
 
 
@@ -78,7 +83,7 @@ def http_error(error):
 def headers(response):
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
-    response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
     if request.path.startswith('/api/'):
         response.headers['Cache-Control'] = 'no-store'
     return response

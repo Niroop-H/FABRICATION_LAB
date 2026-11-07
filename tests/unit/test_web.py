@@ -10,7 +10,7 @@ class TestWeb(unittest.TestCase):
                             initial_thickness_nm=2, ambient='DRY_O2')
 
     def test_page_assets_and_health(self):
-        for path in ('/', '/assets/app.js', '/assets/style.css', '/api/health'):
+        for path in ('/', '/calculator', '/assets/app.js', '/assets/style.css', '/assets/fab.js', '/assets/fab-scene.js', '/assets/fab.css', '/api/health'):
             with self.subTest(path=path):
                 response = self.client.get(path)
                 self.assertEqual(response.status_code, 200)
