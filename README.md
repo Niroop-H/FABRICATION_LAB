@@ -1,4 +1,4 @@
-# Silicon Fabrication Lab
+# Devashri S Silicon Labs
 
 A browser-based semiconductor **training simulator under development**. This is
 not a production-connected digital twin or a qualified manufacturing system.
