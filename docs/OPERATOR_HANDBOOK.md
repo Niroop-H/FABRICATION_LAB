@@ -4,6 +4,72 @@ Revision SIM-SOP-02. Select a bench in the equipment directory to open its works
 
 This is simulator instruction, not a qualified OEM procedure. Setpoints, model predictions and physical measurements are distinct. Input envelopes are not process acceptance specifications. Real process authorization requires equipment-specific procedures and validated recipes.
 
+## Exact control instructions
+
+### New lot
+
+Select a technology and Guided mode, then Create lot & enter. The old record remains on the server; export it first because the browser resumes only the latest selected session.
+
+### Go to required bench
+
+Opens the entry station, loaded wafer bench, or next released operation. It does not move the wafer or bypass the traveller.
+
+### Operation sheet / Process science
+
+Read the numbered procedure first, then the physical basis, assumptions and acceptance guidance. Proceed to recipe and controls opens Operate.
+
+### Confirm entry checks
+
+In Operate at Gowning & entry, tick all three checks and confirm. Processing stays blocked until this is recorded.
+
+### 1 · Load carrier
+
+At the released bench, with the wafer at the stocker and tool IDLE, click Load carrier. The server verifies carrier compatibility. WAFER changes to Loaded.
+
+### Recipe fields
+
+Read the unit beside every field. Defaults are the reference recipe for a first exercise. Input ranges are teaching envelopes, not a promise of passing quality. Editing a field alone does not select the new recipe.
+
+### 2 · Select recipe
+
+After loading, review values and click Select recipe. The server validates and stores them. If you edit values again, select the recipe again before starting.
+
+### 3 · Start process
+
+Requires a selected recipe, correct route, no wafer hold and available exhaust, cooling and vacuum. State changes to RUNNING. Wafer transfer stays locked.
+
+### 4 · Advance time
+
+Enter an interval from 1 to 3600 seconds, then click Advance time. Each click adds at most the remaining process duration. Repeat until COMPLETE or FAULT. LPCVD partial thickness updates; other process results appear at completion.
+
+### Inspect results
+
+Read Current operation result, units, provenance and acceptance limits before unloading. PASS may describe procedural completion only; consult the operation sheet to see which quantities are actually modeled.
+
+### 5 · Unload wafer
+
+Enabled only after completion without a hold. Returns the wafer to the stocker and releases the next route operation. Return to bench directory and open the required bench.
+
+### Abort process / EMERGENCY STOP
+
+Abort is exposed during a run. Emergency stop is available for a loaded, running or completed operation. Both inhibit modeled outputs and hold the wafer; neither is a pause/resume control.
+
+### Facilities console
+
+Open Operate to simulate loss or restoration of exhaust, cooling or vacuum. A loss during processing faults the active tool and holds the wafer. Restore unavailable utilities before reset.
+
+### Acknowledge / Reset tool
+
+In the affected bench Alarms tab, acknowledge awareness, restore utilities if needed, then reset. Reset clears the tool fault but does not release a held wafer.
+
+### Scrap held wafer
+
+After utilities are restored and the loaded tool is reset, use Alarms → Scrap held wafer. No rework release exists in this version. Export the record and create a new lot.
+
+### History / Export report
+
+History shows the latest 50 recorded commands. Export report saves the server session and assessment as JSON, including its retained audit and model limitations.
+
 ## Contamination control
 
 Particles and molecular contamination can alter interfaces, pattern transfer and device yield. Entry discipline is part of process control, not an introductory game objective.
