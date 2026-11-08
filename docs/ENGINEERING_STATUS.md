@@ -5,7 +5,7 @@
 Four distinct condensed teaching routes; versioned profiles; canonical wafer
 identity and layer state; persistent server sessions; route dispatch; carrier
 checks; machine controls; utility faults; holds and disposition; procedure audit;
-first-answer knowledge checks; report export; procedural 3D client and an
+first-answer knowledge checks; report export; direct bench navigation and an
 accessible floor-plan fallback. This is a connected training prototype.
 
 ## Still required by the industrial blueprint

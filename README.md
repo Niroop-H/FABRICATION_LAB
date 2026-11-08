@@ -71,10 +71,10 @@ References: [Vercel Flask deployment](https://vercel.com/docs/frameworks/backend
 
 1. Create a lot and choose a technology and mode.
 2. At Gowning & Entry, confirm the three checks.
-3. Walk with WASD/arrows, drag to look, press E near a terminal, or select a route
-   step/floor-plan station. V or the camera button switches first/third person.
-4. At the current route tool: **Load → Select recipe → Start → Finish run → Unload**.
-   Finish run advances simulation time; it is not real-time processing.
+3. Select a bench in the equipment directory, or use **Go to required bench**.
+   There is no character, walking control, or WebGL dependency.
+4. Study the operation sheet and process science, then use **Load → Select recipe → Start → Advance time → Unload**.
+   Opening a bench does not move the wafer. Carrier loading remains route-controlled.
 5. Inspect layer genealogy and model outputs. Export the report for instructor review.
 6. Use the handbook for station principles and knowledge checks.
 
@@ -103,13 +103,10 @@ Tests cover all four complete routes, carrier/order rejection, utility trips,
 wafer holds, alarm reset, quality excursions, persistence, bearer authentication,
 concurrent revision rejection, HTTP validation and assessment evidence.
 
-The 3D renderer imports pinned Three.js 0.170.0 from jsDelivr. Internet access to
-that CDN and WebGL are needed for 3D; machine operation remains available via the
-floor-plan fallback. Browser QA in the development environment verified lot
-creation, entry, a complete machine cycle and refresh/resume through that fallback;
-WebGL was disabled in that environment, so the 3D geometry/camera view still needs
-visual acceptance on a WebGL-capable browser. PostgreSQL deployment has not been
-validated against a live provisioned database in this workspace.
+The equipment directory uses native HTML controls and opens a dedicated scientific
+workstation. Browser preview refresh was blocked by the browser policy during the
+latest navigation change; JavaScript syntax and the 43 backend tests passed.
+PostgreSQL deployment has not been validated against a live provisioned database.
 
 See [operator handbook](docs/OPERATOR_HANDBOOK.md),
 [model traceability](docs/MODEL_TRACEABILITY.md), and
