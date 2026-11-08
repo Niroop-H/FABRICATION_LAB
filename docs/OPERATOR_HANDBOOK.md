@@ -329,3 +329,175 @@ Study question: Why must a wafer remain held even after the utility and equipmen
 - [TU Wien — Deal–Grove oxidation model](https://www.iue.tuwien.ac.at/phd/filipovic/node31.html) — Oxidation theory; not qualification of simulator coefficients.
 - [BYU Integrated Microfabrication Lab — process reference](https://www.cleanroom.byu.edu/processes) — Further study across fabrication processes; not a recipe release for this simulator.
 - [IIT Bombay Nanofabrication Facility — dry etch tools](https://www.iitbnf.iitb.ac.in/iitbnf/infrastructure/dry_etch_tools.php) — Pattern-transfer context and equipment families.
+
+## Route steps: simulation and real fabrication
+
+Real workflows vary by equipment and approved process integration. These comparisons explain roles and physical intent; they are not machine-specific operating recipes.
+
+### Representative gate dielectric growth
+
+**Purpose:** Form an insulating oxide and study how process conditions affect its modeled thickness.
+
+**In the simulator:** Set temperature and duration, then run the oxidation step. The Deal–Grove model computes oxide thickness and adds it to the wafer stack; thin-oxide corrections are disabled.
+
+**In a real fab:** A qualified thermal oxidation sequence controls the wafer temperature, oxidizing ambient and time to grow silicon dioxide by consuming silicon at the interface. Operators verify the released recipe and equipment readiness; inspection evaluates the resulting film. Actual gate-dielectric integration may use different materials or methods, and the app model is not sufficient to qualify ultrathin gate oxides.
+
+### Incoming inspection & surface clean
+
+**Purpose:** Prepare the starting surface for subsequent interfaces and films.
+
+**In the simulator:** Run the clean checkpoint; the simulator sets its particle count to zero.
+
+**In a real fab:** An operator verifies lot identity and incoming condition, then runs an approved surface preparation sequence using compatible equipment. Inspection determines whether contamination requirements are met; running a clean does not prove a particle-free wafer.
+
+### Verify SOI body and buried oxide
+
+**Purpose:** Confirm the starting substrate matches the intended device architecture.
+
+**In the simulator:** Read the body and buried-oxide dimensions stored in the reference SOI wafer.
+
+**In a real fab:** The facility checks supplied SOI material against its specifications using appropriate metrology and supplier records. Body thickness and buried oxide are separate quantities.
+
+### Representative high-k gate dielectric
+
+**Purpose:** Introduce the insulating layer associated with gate control.
+
+**In the simulator:** Enter a target thickness; the model adds an HfO2 layer directly to the stack.
+
+**In a real fab:** A qualified process forms the gate dielectric, often using atomic layer deposition for suitable high-k films. Engineers evaluate thickness, interfaces, composition and electrical behavior. This app does not perform ALD cycle chemistry.
+
+### Gate electrode deposition
+
+**Purpose:** Provide material that will subsequently be patterned into a gate electrode.
+
+**In the simulator:** For new bulk-planar routes, temperature, pressure, flow and elapsed time determine modeled LPCVD thickness. The FD-SOI and legacy routes use target thickness bookkeeping.
+
+**In a real fab:** An operator loads the released lot and runs the approved gate-stack recipe. The actual material and deposition method depend on process integration. Film thickness, uniformity and material properties are checked; a generic silicon layer does not reproduce a modern qualified gate stack.
+
+### Coat, align, expose & develop
+
+**Purpose:** Define where the next pattern-transfer process acts.
+
+**In the simulator:** Set an overlay offset and run the alignment check. The app records nominal feature size and alignment; it does not form a physical resist image.
+
+**In a real fab:** A lithography sequence coats photoresist, performs the prescribed bake steps, aligns the wafer and pattern, exposes the resist, and develops it. Inspection checks pattern quality before transfer.
+
+### Second pattern alignment demonstration
+
+**Purpose:** Study why registration between patterning steps matters.
+
+**In the simulator:** Run a second alignment check within the reference overlay window.
+
+**In a real fab:** A multi-patterning scheme needs a defined sequence of masks and intermediate processing. Operators align each relevant level and inspect registration. This additional app step illustrates alignment only, not a complete multi-patterning flow.
+
+### Pattern transfer into gate electrode
+
+**Purpose:** Transfer the defined pattern into the electrode film.
+
+**In the simulator:** Set source and bias RF powers. The plasma model estimates etch rate and anisotropy; the stack marks the gate film as patterned.
+
+**In a real fab:** A qualified etch process removes exposed gate material while the mask protects intended features. Engineers check endpoint, selectivity and resulting dimensions/profile. The app does not calculate full evolving feature geometry.
+
+### Resist strip & post-etch clean
+
+**Purpose:** Remove temporary mask material and residues before later processing.
+
+**In the simulator:** Run a second clean checkpoint after pattern transfer; the simulated contamination count is reset.
+
+**In a real fab:** After the mask has served its purpose, an approved strip and residue-clean sequence removes resist and etch by-products while protecting the remaining materials. Compatibility and inspection determine acceptability.
+
+### Representative source/drain implant
+
+**Purpose:** Introduce dopant into selected regions before activation processing.
+
+**In the simulator:** Choose ion energy; the existing arsenic range model reports projected range and straggle.
+
+**In a real fab:** The released implant recipe specifies species, dose, energy and other tool settings. The operator verifies the recipe and lot, while equipment delivers the ion beam under controlled conditions. Range alone does not establish dose, activated concentration or junction performance.
+
+### Raised source/drain concept demonstration
+
+**Purpose:** Illustrate adding material locally in source/drain regions.
+
+**In the simulator:** Enter the requested regional height; the app records it as a concept result without simulating epitaxial growth.
+
+**In a real fab:** A suitable process integration may use selective epitaxial growth to form raised regions. Material, doping, selectivity and geometry are process-specific and require inspection.
+
+### Thermal activation / recovery checkpoint
+
+**Purpose:** Connect implantation or other prior processing with its required thermal treatment.
+
+**In the simulator:** Complete an anneal checkpoint. No dopant activation or diffusion is calculated.
+
+**In a real fab:** The approved thermal cycle controls temperature history and ambient for the intended material changes, such as implant damage recovery and dopant activation. Engineers evaluate activation and unwanted redistribution.
+
+### Interlayer dielectric deposition
+
+**Purpose:** Provide insulation associated with subsequent wiring levels.
+
+**In the simulator:** Enter a thickness target; the app adds a SiO2 layer to the stack.
+
+**In a real fab:** An approved dielectric process deposits an insulating film. Coverage, thickness, defects and integration with later contacts/interconnects are evaluated.
+
+### Dielectric planarization
+
+**Purpose:** Prepare a more suitable surface for later lithography and interconnect processing.
+
+**In the simulator:** Enter removal thickness; the app subtracts material from the top film.
+
+**In a real fab:** CMP equipment uses a qualified pad/slurry and controlled mechanics to reduce topography. Inspection assesses remaining film, uniformity, defects and local effects. A thickness subtraction alone does not establish planarity.
+
+### Damascene interconnect pattern
+
+**Purpose:** Define the intended interconnect openings.
+
+**In the simulator:** Run another overlay check for the wiring-pattern step.
+
+**In a real fab:** Lithography defines the intended openings in the dielectric using the released mask and resist process. Operators inspect alignment and pattern quality before dielectric etching.
+
+### Dielectric trench pattern transfer
+
+**Purpose:** Create the openings that will subsequently receive conductor material.
+
+**In the simulator:** Run the plasma model with dielectric chemistry assumptions; mark the dielectric as patterned.
+
+**In a real fab:** A dielectric etch transfers the mask openings into the insulating material. Depth, profile, selectivity and residue control affect later metal filling.
+
+### Al interconnect deposition
+
+**Purpose:** Introduce the conductor used by this reference interconnect concept.
+
+**In the simulator:** Add the requested aluminum thickness to the stack.
+
+**In a real fab:** An aluminum wiring process deposits and patterns conductor using its qualified integration sequence. This condensed app route omits important operations; adding an Al film does not create a complete connected wiring network.
+
+### Cu interconnect deposition
+
+**Purpose:** Introduce conductor into the interconnect concept before overburden removal.
+
+**In the simulator:** Add the requested copper thickness to the stack.
+
+**In a real fab:** A copper damascene integration generally includes barrier/liner and seed preparation, metal fill and subsequent planarization. The operator follows the released sequence and checks fill quality. These intermediate layers and fill mechanics are omitted here.
+
+### Cu overburden polish
+
+**Purpose:** Illustrate removing excess conductor after a fill operation.
+
+**In the simulator:** Subtract the requested amount from the top copper film.
+
+**In a real fab:** A qualified copper CMP sequence removes overburden while controlling remaining structures, dishing, erosion and defects. Endpoint and post-process inspection matter; uniform subtraction cannot reproduce them.
+
+### Final thickness, CD & defect inspection
+
+**Purpose:** Review process evidence and decide whether further assessment is needed.
+
+**In the simulator:** Read total film thickness and particle count from simulator state, plus SOI dimensions where applicable. This step does not independently measure CD despite its route title.
+
+**In a real fab:** Real inspection uses an appropriate measurement plan and calibrated methods for specified dimensions, thicknesses and defects. Engineers compare results with release criteria and review deviations. Final device qualification requires additional electrical and reliability evidence.
+
+### Entry and carrier verification
+
+**Purpose:** Establish contamination-control and identity discipline before processing.
+
+**In the simulator:** Confirm the apparel, glove/footwear and carrier checkboxes to enable the route.
+
+**In a real fab:** Personnel follow the facility gowning and handling procedure, verify authorization and material identity, and use compatible carriers. Checking boxes is not physical verification.

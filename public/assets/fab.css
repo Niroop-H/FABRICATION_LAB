@@ -10,3 +10,4 @@
 
 /* Product identity */
 .brand{font-size:20px;letter-spacing:0;line-height:1.25;flex-shrink:0}header{flex-wrap:wrap;height:auto;min-height:76px;padding-top:14px;padding-bottom:14px}@media(max-width:700px){.brand{font-size:18px}}
+.step-explanation{padding:16px 0;border-top:1px solid #afc2cf;margin-top:16px;line-height:1.7}.step-comparison{display:grid;grid-template-columns:1fr 1fr;gap:16px}.step-comparison>div{padding:14px;border:1px solid #aabfcd;border-radius:3px}.step-comparison h4{margin:0;font-size:13px}.step-comparison p{font-size:13px}.stop-card details{margin:12px 0;font-size:12px}.stop-card summary{cursor:pointer;color:#1b648e}.stop-card .step-comparison{grid-template-columns:1fr}#guide .step-comparison{color:#cadce6}@media(max-width:700px){.step-comparison{grid-template-columns:1fr}}
