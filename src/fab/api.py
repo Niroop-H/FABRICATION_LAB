@@ -44,3 +44,17 @@ def rejected(error):
 @fab.errorhandler(StoreError)
 def storage_error(error):
     return {'error':str(error)},error.status
+
+
+@fab.get('/handbook')
+def get_handbook():
+    from src.fab.training import handbook
+    return handbook()
+
+
+@fab.get('/sessions/<sid>/report')
+def get_report(sid):
+    from src.fab.training import assessment
+    state=load(sid)
+    return {'session_id':sid,'state':state,'assessment':assessment(state),
+            'limitations':catalog()['limitations']}

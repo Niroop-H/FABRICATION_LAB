@@ -21,8 +21,8 @@ def require(condition, message):
 
 
 def new_session(node='180', mode='guided'):
-    require(node in PROFILES, 'Unknown technology profile.')
-    require(mode in ('guided','independent','assessment'), 'Unknown training mode.')
+    require(isinstance(node,str) and node in PROFILES, 'Unknown technology profile.')
+    require(isinstance(mode,str) and mode in ('guided','independent','assessment'), 'Unknown training mode.')
     lot = 'LOT-' + uuid.uuid4().hex[:8].upper()
     if node == '22fdsoi':
         wafer = Wafer.create_22nm_fdsoi_wafer(lot, 1)
@@ -70,6 +70,16 @@ def apply(state, command):
 
 def operate(s, c):
     action, tool = c.get('action'), c.get('tool')
+    if action == 'answer':
+        from src.fab.training import QUESTIONS
+        question = next((q for q in QUESTIONS if q['id']==c.get('question')), None)
+        require(question is not None, 'Unknown knowledge check.')
+        choice = c.get('choice')
+        require(type(choice) is int and 0 <= choice < len(question['options']), 'Select a valid answer.')
+        answers = s.setdefault('answers',{})
+        require(question['id'] not in answers, 'First submission is already recorded. Start a new session to reassess.')
+        answers[question['id']] = {'choice':choice, 'correct':choice==question['answer']}
+        return ('Correct. ' if choice==question['answer'] else 'Review required. ') + question['explanation']
     if action == 'gown':
         require(not s['gowned'], 'Entry checks already complete.')
         require(c.get('checks') == ['apparel','gloves','carrier'], 'Confirm apparel, gloves and carrier checks in order.')
@@ -77,7 +87,7 @@ def operate(s, c):
         return 'Entry checks recorded. Cleanroom access enabled.'
     if action in ('fault','restore'):
         utility = c.get('utility')
-        require(utility in s['utilities'], 'Unknown facility utility.')
+        require(isinstance(utility,str) and utility in s['utilities'], 'Unknown facility utility.')
         s['utilities'][utility] = action == 'restore'
         if action == 'fault':
             for name,t in s['tools'].items():
@@ -85,7 +95,7 @@ def operate(s, c):
                     t.update(state='FAULT', outputs=False, alarm=f'{utility} lost', acknowledged=False)
                     s['hold'] = 'Interrupted process: wafer held for disposition.'
         return f'{utility}: '+('available; acknowledge and reset affected tools' if action=='restore' else 'lost; active tool outputs inhibited')
-    require(tool in s['tools'], 'Select a known machine.')
+    require(isinstance(tool,str) and tool in s['tools'], 'Select a known machine.')
     t = s['tools'][tool]
     step = current_step(s)
     if action == 'acknowledge':

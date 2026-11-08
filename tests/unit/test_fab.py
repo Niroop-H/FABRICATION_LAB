@@ -85,6 +85,16 @@ class TestFabStorage(unittest.TestCase):
         self.assertEqual(self.client.post(path+'/commands',json=command_data,headers=headers).status_code,200)
         self.assertEqual(self.client.post(path+'/commands',json=command_data,headers=headers).status_code,409)
         self.assertTrue(Store().read(data['id'],data['token'])['gowned'])
+    def test_authenticated_report_contains_evidence_without_secret(self):
+        data=self.client.post('/api/fab/sessions',json={'mode':'assessment'}).json
+        path='/api/fab/sessions/'+data['id']+'/report'
+        self.assertEqual(self.client.get(path).status_code,401)
+        response=self.client.get(path,headers={'Authorization':'Bearer '+data['token']})
+        self.assertEqual(response.status_code,200)
+        self.assertFalse(response.json['assessment']['certification'])
+        self.assertNotIn(data['token'],response.get_data(as_text=True))
+        self.assertEqual(len(self.client.get('/api/fab/handbook').json['modules']),12)
+
     def test_compare_and_swap_rejects_concurrent_write(self):
         store=Store(); state=new_session(); sid,token=store.create(state)
         changed=command(state,'gown',checks=['apparel','gloves','carrier']); store.save(sid,0,changed)
@@ -92,3 +102,29 @@ class TestFabStorage(unittest.TestCase):
     def test_vercel_requires_durable_storage(self):
         with patch.dict(os.environ,{'VERCEL':'1'}):
             self.assertEqual(self.client.post('/api/fab/sessions',json={}).status_code,503)
+
+
+class TestTraining(unittest.TestCase):
+    def test_first_answer_is_retained(self):
+        from src.fab.training import assessment, handbook
+        s=command(new_session(mode='assessment'),'answer',question='alarm',choice=0)
+        self.assertFalse(apply(s,dict(action='answer',question='alarm',choice=1))[1])
+        report=assessment(s)
+        self.assertEqual(report['knowledge_correct'],0)
+        self.assertFalse(report['certification'])
+        self.assertNotIn('answer',handbook()['questions'][0])
+
+    def test_all_correct_is_not_route_completion(self):
+        from src.fab.training import assessment, QUESTIONS
+        s=new_session(mode='assessment')
+        for q in QUESTIONS:
+            s=command(s,'answer',question=q['id'],choice=q['answer'])
+        report=assessment(s)
+        self.assertEqual(report['knowledge_correct'],3)
+        self.assertFalse(report['route_complete'])
+
+    def test_invalid_types_are_rejected(self):
+        from src.fab.engine import Rejected
+        with self.assertRaises(Rejected):new_session(node=[])
+        for c in ({'action':'load','tool':[]},{'action':'fault','utility':{}}):
+            self.assertFalse(apply(new_session(),c)[1])
