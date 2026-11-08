@@ -1,6 +1,6 @@
 # Fabrication study manual
 
-Revision SIM-SOP-02. Select a bench in the equipment directory to open its workstation. There is no character or walking control. Opening a workstation does not transfer a wafer; use the permitted carrier-load operation. Each workstation separates its operation sheet, process science, recipe controls, alarms and history.
+Revision SIM-SOP-02. Follow the guided route map: numbered stops show process order, completed stops have ticks, and YOU ARE HERE identifies the current operation. Use Locate on map to find that stop and Open current workstation to work there. Repeated visits to the same bench appear as separate stops. The connecting line represents process order, not physical distance. All equipment and support benches remain available below the map. There is no character or walking control. Opening a workstation does not transfer a wafer; use the permitted carrier-load operation. Each workstation separates its operation sheet, process science, recipe controls, alarms and history.
 
 This is simulator instruction, not a qualified OEM procedure. Setpoints, model predictions and physical measurements are distinct. Input envelopes are not process acceptance specifications. Real process authorization requires equipment-specific procedures and validated recipes.
 
