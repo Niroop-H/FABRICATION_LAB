@@ -19,6 +19,9 @@ not a production-connected digital twin or a qualified manufacturing system.
 - Durable sessions with capability-token access and optimistic concurrency.
 - Guided prompts, independent operation, recorded assessment mode, first-attempt
   knowledge checks, station handbook and server-generated JSON reports.
+- New bulk-planar gate deposition uses time-integrated LPCVD kinetics, partial
+  film tracking, a thickness quality window and a growth trace. Existing sessions
+  retain their original recipes through immutable route snapshots.
 - Separate oxidation calculator at `/calculator` using the existing process model.
 
 ## Start locally

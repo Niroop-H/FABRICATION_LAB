@@ -27,7 +27,7 @@ def param(label, unit, value, low, high):
                 provenance='Teaching envelope v1; not OEM-qualified', calibration='unvalidated')
 
 
-def route(node):
+def route(node, version='training-v2'):
     p = PROFILES[node]
     steps = []
     def add(kind, name, seconds=60, params=None, model='procedure'):
@@ -44,6 +44,18 @@ def route(node):
              'duration_s':param('Duration','s',600,60,1800)}, 'Deal–Grove')
     add('deposition', 'Gate electrode deposition', 120,
         {'thickness_nm':param('Film target','nm',p['gate_nm'],p['gate_nm']*.8,p['gate_nm']*1.2)}, 'target-controlled film')
+    if version == 'training-v2' and node != '22fdsoi':
+        from src.fab.deposition import growth_rate
+        nominal = {'temperature_c':650, 'pressure_torr':0.5, 'flow_sccm':100}
+        seconds = round(p['gate_nm'] / growth_rate(nominal) * 60, 2)
+        steps[-1].update(seconds=seconds, model='time-integrated LPCVD',
+            target_nm=p['gate_nm'], tolerance_pct=10,
+            params={
+                'temperature_c':param('Temperature','°C',650,600,720),
+                'pressure_torr':param('Chamber pressure','Torr',0.5,0.1,1.0),
+                'flow_sccm':param('Precursor flow','sccm',100,50,200),
+                'duration_s':param('Duration','s',seconds,60,7200),
+            })
     add('lithography', 'Coat, align, expose & develop', 90,
         {'overlay_nm':param('Overlay offset','nm',0,-p['overlay_nm']*2,p['overlay_nm']*2)}, 'overlay teaching model')
     if node == '22fdsoi':
@@ -80,7 +92,8 @@ def route(node):
 
 
 def catalog():
-    return {'version':'training-v1', 'profiles':deepcopy(PROFILES),
+    return {'version':'training-v2', 'profiles':deepcopy(PROFILES),
             'tools':{k:dict(name=v[0],id=v[1],x=v[2],z=v[3]) for k,v in TOOLS.items()},
             'routes':{k:route(k) for k in PROFILES},
+            'legacy_routes':{k:route(k,'training-v1') for k in PROFILES},
             'limitations':'Condensed teaching routes; no foundry qualification, real equipment control, or certification.'}

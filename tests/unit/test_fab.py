@@ -31,7 +31,8 @@ class TestFabEngine(unittest.TestCase):
                 s=command(s,'gown',checks=['apparel','gloves','carrier'])
                 while current_step(s):
                     s=prepare(s); tool=current_step(s)['tool']
-                    s=command(s,'advance',tool=tool,seconds=3600)
+                    while s['tools'][tool]['state']=='RUNNING':
+                        s=command(s,'advance',tool=tool,seconds=3600)
                     s=command(s,'unload',tool=tool)
                 self.assertEqual(s['status'],'complete')
                 self.assertEqual(s['wafer']['wafer_id'],identity)
@@ -61,7 +62,10 @@ class TestFabEngine(unittest.TestCase):
     def test_out_of_spec_overlay_holds_route(self):
         s=command(new_session(),'gown',checks=['apparel','gloves','carrier'])
         while current_step(s)['tool']!='lithography':
-            s=prepare(s); tool=current_step(s)['tool']; s=command(s,'advance',tool=tool,seconds=3600); s=command(s,'unload',tool=tool)
+            s=prepare(s); tool=current_step(s)['tool']
+            while s['tools'][tool]['state']=='RUNNING':
+                s=command(s,'advance',tool=tool,seconds=3600)
+            s=command(s,'unload',tool=tool)
         s=command(s,'load',tool='lithography',carrier=s['carrier'])
         s=command(s,'recipe',tool='lithography',parameters={'overlay_nm':60})
         s=command(s,'start',tool='lithography'); s=command(s,'advance',tool='lithography',seconds=3600)

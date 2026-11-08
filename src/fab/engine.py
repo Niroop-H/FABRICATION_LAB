@@ -29,7 +29,7 @@ def new_session(node='180', mode='guided'):
     else:
         wafer = Wafer(WaferID(lot, 1, lot+'-01'), WaferSubstrate(diameter=wafer_diameter(PROFILES[node]['diameter'])))
     wafer.state.particle_count = 12
-    return dict(schema=1, node=node, mode=mode, revision=0, clock=0, step=0,
+    return dict(schema=1, route_version='training-v2', route=route(node), node=node, mode=mode, revision=0, clock=0, step=0,
                 gowned=False, wafer=wafer.to_dict(), carrier=PROFILES[node]['carrier'],
                 location='stock', status='active', tools={k:dict(state='IDLE', recipe=None,
                 remaining=0, alarm=None, acknowledged=False, outputs=False) for k in TOOLS},
@@ -38,7 +38,7 @@ def new_session(node='180', mode='guided'):
 
 
 def current_step(state):
-    steps = route(state['node'])
+    steps = state.get('route') or route(state['node'],'training-v1')
     return steps[state['step']] if state['step'] < len(steps) else None
 
 
@@ -142,13 +142,17 @@ def operate(s, c):
     if action == 'start':
         require(t['state']=='LOADED' and t['recipe'] is not None, 'Load a wafer and select the route recipe first.')
         require(all(s['utilities'].values()), 'Interlock: exhaust, cooling and vacuum must be available.')
-        t.update(state='RUNNING', remaining=t['recipe'].get('duration_s',step['seconds']), outputs=True, started=s['clock'])
+        t.update(state='RUNNING', remaining=t['recipe'].get('duration_s',step['seconds']), outputs=True, started=s['clock'], trend=[])
         return 'Process started. Wafer movement is locked until completion.'
     if action == 'advance':
         require(t['state']=='RUNNING', 'Tool is not processing.')
         seconds=c.get('seconds',30)
         require(type(seconds) in (int,float) and math.isfinite(seconds) and 0<seconds<=3600, 'Advance must be 1–3600 simulated seconds.')
-        elapsed=min(seconds,t['remaining']); s['clock']+=elapsed; t['remaining']-=elapsed
+        elapsed=min(seconds,t['remaining'])
+        if step['model']=='time-integrated LPCVD':
+            from src.fab.deposition import advance_film
+            advance_film(s,step,t,elapsed)
+        s['clock']+=elapsed; t['remaining']-=elapsed
         if t['remaining']==0:
             output = process(s,step,t['recipe'])
             output.update(step_id=step['id'], name=step['name'], time_s=s['clock'])
@@ -186,7 +190,18 @@ def process(s, step, params):
         measure('oxide',r.final_thickness.value,'nm'); measure('uncertainty',r.final_thickness.uncertainty,'nm')
     elif kind=='deposition':
         material = 'HfO2' if 'high-k' in name else ('SiO2' if 'dielectric' in name else (profile['metal'] if 'interconnect' in name else 'Si'))
-        if 'source/drain' in name:
+        if step['model']=='time-integrated LPCVD':
+            from src.fab.deposition import growth_rate
+            layer=next(l for l in wafer.layer_stack.layers if l.layer_id==step['id'])
+            actual=layer.thickness.value
+            measure('film',actual,'nm'); measure('growth_rate',growth_rate(params),'nm/min')
+            measure('target',step['target_nm'],'nm')
+            tolerance=step['target_nm']*step['tolerance_pct']/100
+            measure('lower_limit',step['target_nm']-tolerance,'nm')
+            measure('upper_limit',step['target_nm']+tolerance,'nm')
+            output['pass']=abs(actual-step['target_nm'])<=tolerance
+            output['provenance']='deposition_models.py: calculate_cvd_kinetics; constant-setpoint integration; uncalibrated'
+        elif 'source/drain' in name:
             measure('raised_region_height',params['thickness_nm'],'nm')
         else:
             film(material,params['thickness_nm']); measure('film',params['thickness_nm'],'nm')

@@ -16,7 +16,7 @@ server record, but it replaces the browser's currently remembered token.
 Complete apparel, gloves and carrier checks. The route traveller releases one
 operation at a time. Select the required machine, load the matching carrier,
 review parameter names and units, select the recipe and check utility indicators.
-Start processing. While running, the wafer cannot be unloaded. Finish run advances
+Start processing. While running, the wafer cannot be unloaded. Advance time advances
 simulated time by up to 3,600 seconds. Review the result and unload to release the
 next step. A completed route is training evidence, not a fabricated qualified IC.
 
@@ -28,7 +28,7 @@ next step. A completed route is training evidence, not a fabricated qualified IC
 | Stocker | Identity, diameter and carrier consistency | Single-wafer transport; no robotic trajectory or carrier slot arbitration |
 | Wet preparation | Contamination and surface readiness | Particles reset by a teaching action; wet chemistry not modeled |
 | Oxidation | Time and temperature affect film growth | Existing Deal–Grove calculation; no ultrathin correction or benchmark qualification |
-| Deposition | Film material and target thickness | Target film added; no gas delivery/kinetic integration in this route |
+| Deposition | Film material, recipe duration and thickness | Bulk-planar gate LPCVD integrates existing kinetics; other films remain target bookkeeping. Inspect the ±10% teaching window and partial growth trace. |
 | Lithography | Profile-specific scanner and overlay review | Offset checked against teaching tolerance; no optical resist simulation |
 | Etch | Pattern transfer and rate/selectivity concepts | Existing plasma rate estimate and endpoint bookkeeping; not a timed 3D feature solver |
 | Implant | Species, energy, projected range and straggle | Existing range table; no full electrical device calculation |
@@ -63,3 +63,12 @@ reported as such rather than treated as passed.
 An instructor should review the audit and model limitations. Actual facility
 qualification requires approved SOPs, supervised practical assessment and expert
 sign-off outside this software.
+
+## Time-integrated gate deposition
+
+For new 180/130/65 nm sessions, select temperature, chamber pressure, precursor
+flow and duration. Advance time can be used more than once for long recipes.
+The visible film stack grows with each advance. Abort or utility loss retains
+that partial film on the held wafer. Completion outside the teaching thickness
+window triggers a quality hold. No gas use, stress, spatial uniformity or
+industrial calibration is implied. Existing v1 sessions keep their old recipe.

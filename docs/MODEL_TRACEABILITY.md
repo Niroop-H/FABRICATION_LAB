@@ -11,7 +11,8 @@ choices, not verified OEM limits. No standards compliance is claimed.
 | Oxide growth | `thermal_oxidation.py`, Deal–Grove implementation | °C, s, nm | Existing numerical model; no external benchmark in this release |
 | Plasma rate/profile estimate | `etch_models.py`, plasma state and profile functions | W, mTorr, nm/min | Integration exercised; industrial accuracy unverified |
 | Implant projected range | `implant_models.py`, range lookup | keV, nm | Integration exercised; source tables not independently audited |
-| Film deposition | `src/fab/engine.py`, target-controlled film addition | nm | Bookkeeping only; no deposition kinetics |
+| Bulk-planar gate LPCVD (training-v2) | `deposition_models.py` Grove-series kinetics, integrated in `src/fab/deposition.py` | °C, Torr, sccm, s, nm/min, nm | Time-step/partial-film/hold tests; uncalibrated coefficients and uncharacterized physical uncertainty |
+| Other film deposition | `src/fab/engine.py`, target-controlled film addition | nm | Bookkeeping only; no deposition kinetics |
 | Lithography | catalog-specific overlay limit comparison | nm | Teaching envelope only; no resist/optical physics |
 | CMP | canonical layer removal | nm | Material-thickness bookkeeping only |
 | Anneal | procedure checkpoint | s | No physical model in connected route |
@@ -34,3 +35,13 @@ Before an industrial release, every limit/model needs a source revision,
 applicability envelope, independent benchmark dataset, error tolerance and
 reviewer approval. The current software tests establish state consistency, not
 physical fidelity.
+
+## Process-library compatibility
+
+New sessions store a complete training-v2 route snapshot. Sessions created before
+snapshots existed resolve training-v1 recipes. New defaults are illustrative
+model-derived durations, not manufacturing-qualified recipes. Gate thickness is
+held outside ±10% of its profile target; that window is a teaching threshold.
+The legacy PhysicalQuantity field uses zero for an uncharacterized uncertainty
+in this adapter; its source text and result metadata explicitly state that this
+is not a claim of zero physical error.

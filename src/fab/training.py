@@ -20,7 +20,7 @@ def handbook():
         'stock':('Wafer handling','Confirm the laser mark, diameter and carrier. A wafer is either at the stocker or one tool; never both.'),
         'clean':('Wet preparation','Surface preparation removes contamination. This module records a procedural clean; no chemical mixing or wet kinetics are modeled.'),
         'oxidation':('Thermal growth','The existing Deal–Grove engine predicts silicon dioxide growth. Thin-oxide corrections are disabled. Real ultrathin gate dielectrics need validated models.'),
-        'deposition':('Thin films','This route adds a specified film target to the layer stack. Growth rate, gas consumption and film stress are not modeled in the connected teaching route.'),
+        'deposition':('Thin films','New bulk-planar gate recipes integrate the existing LPCVD growth model over time. Other depositions remain target bookkeeping. Gas consumption, stress and physical uncertainties are not validated.'),
         'lithography':('Patterning','Review the profile-specific scanner choice and overlay window. Overlay excursions hold the wafer. Resist chemistry and optical imaging are not simulated.'),
         'etch':('Pattern transfer','The existing plasma model estimates rate and anisotropy. An endpoint bookkeeping step marks the protected film patterned; full 3D etch evolution is not simulated.'),
         'implant':('Doping','Projected range and straggle are estimated by the existing range table. The route does not calculate complete transistor doping or electrical characteristics.'),
@@ -36,7 +36,7 @@ def handbook():
 
 
 def assessment(state):
-    audit=state['audit']; completed=len(state['completed']); total=len(route(state['node']))
+    audit=state['audit']; completed=len(state['completed']); total=len(state.get('route') or route(state['node'],'training-v1'))
     failed=[e for e in audit if not e['ok']]
     answers=state.get('answers',{})
     correct=sum(a['correct'] for a in answers.values())
