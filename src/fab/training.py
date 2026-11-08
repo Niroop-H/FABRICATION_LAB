@@ -1,5 +1,6 @@
 """Evidence-based training review, never real-equipment certification."""
 from src.fab.catalog import route
+from src.fab.manuals import manuals, references
 
 QUESTIONS = [
     {'id':'alarm', 'prompt':'Does acknowledging an alarm restore the equipment?',
@@ -29,7 +30,7 @@ def handbook():
         'metrology':('Inspection','Inspect model-derived film thickness, particles and SOI dimensions. These are deterministic simulated values, not an independent measurement or calibration.'),
         'facilities':('Utilities and recovery','Inject utility loss only in the simulator. Outputs are inhibited and running wafers held. Restore the utility, acknowledge, reset and disposition. Actual equipment-specific emergency behavior requires expert review.'),
     }
-    return {'version':'training-v1','modules':{k:{'title':v[0],'principle':v[1]} for k,v in modules.items()},
+    return {'manuals':manuals(), 'references':references(), 'version':'training-v2','modules':{k:{'title':v[0],'principle':v[1]} for k,v in modules.items()},
             'sequence':['Verify entry and wafer identity','Load the released tool','Review parameters and select recipe','Check interlocks and start','Advance simulated time; inspect results','Unload to release the next route step'],
             'questions':[{k:v for k,v in q.items() if k not in ('answer','explanation')} for q in QUESTIONS],
             'limitations':'Demonstrates simulator procedure only. No OEM approval, industrial compliance, or real-equipment authorization.'}
